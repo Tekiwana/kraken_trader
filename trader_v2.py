@@ -20,8 +20,6 @@ kraken = KrakenAPI(kraken)
 """
 Config:
 Refresh rate: Time to sleep between 2 queries.
-buy_limit:
-sell_limit:
 crypto_pair_list: List of crypto pairs, you want to trade.
 """
 refresh_rate = 3600  # Seconds
@@ -34,7 +32,6 @@ crypto_pair_list = [
     "LTCGBP", "MATICGBP", "MKRGBP", "OCEANGBP", "RARIGBP", "RENGBP", "SANDGBP",
     "SNXGBP", "ETHGBP", "XRPGBP", "XTZGBP", "XBTGBP", "XLMGBP"
     ]  # Tradable pair(s)
-#crypto_pair_list = ["FLOWGBP"]
 to_buy = {}
 open_pos = {}
 trading = False
@@ -154,7 +151,7 @@ def data_sorter(crypto_name, data, price):
 
 def calculate_average(crypto_name, price):
     """
-    Get the 4 and 1 month OHLC data and pass it to data_sorter() fuc.
+    Get the 4 and 1 month OHLC data and pass it to data_sorter() func.
     if 4 month percentage smaller than -25% and 3 days perc. bigger than -0.8%,
     store the crypto name in to_buy{} dict.
     Return:
@@ -205,7 +202,7 @@ if __name__ == "__main__":
         four_month_trigger = -25.0
         three_day_trigger = -0.8
         refresh_rate = 3600
-    print("\n\nYOUR BALANE IS: ")
+    print("\n\nYOUR BALANCE IS: ")
     print(get_balance(), "\n")
 
     while True:
