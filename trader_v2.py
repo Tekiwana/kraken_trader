@@ -5,6 +5,8 @@ import os
 from pykrakenapi import KrakenAPI
 import smtplib
 import ssl
+import colorama
+from colorama import Fore as f
 
 
 kraken = krakenex.API()
@@ -12,7 +14,7 @@ try:
     kraken.load_key("kraken.key")
 except FileNotFoundError:
     print("Key file cannot be located.\nMake sure you keep the kraken.key file in the root directory.")
-    input("\nPress any key to exit")
+    input("\nPress 'ENTER' key to exit")
     os._exit(1)
 kraken = KrakenAPI(kraken)
 
@@ -35,6 +37,7 @@ crypto_pair_list = [
 to_buy = {}
 open_pos = {}
 trading = False
+colored_line = 0
 
 
 def clear(): return os.system("cls")
@@ -208,7 +211,7 @@ if __name__ == "__main__":
     while True:
         try:
             id_counter = 1
-            print("Kraken Crypto Trader v0.2 TEST\n")
+            print(f.RED + "Kraken Crypto Trader v0.2 TEST\n" + f.WHITE)
             setting_string = "Settings:\n\t4 month deviation trigger: "
             setting_string += str(four_month_trigger)+" %\n\t"
             setting_string += "3 day deviation trigger: " + \
@@ -223,11 +226,22 @@ if __name__ == "__main__":
             for crypto_name in crypto_pair_list:
                 price = get_price(crypto_name)
                 f_month_avg, t_day_avg = calculate_average(crypto_name, price)
-                data_string = "["+get_time()+"]"+"[Id:"+str(id_counter)+"]"
-                data_string += "["+crypto_name+"]   "
-                data_string += "\t[Price: "+str(price)[:9]+"]  "
-                data_string += "\t[4 month change: "+str(f_month_avg)[:5]+"]"
-                data_string += "\t[3 days change: " + str(t_day_avg)[:5]+"]"
+                data_string = "[" + get_time() + "]" + "[Id:" + str(id_counter) + "]"
+                if f_month_avg <= -25 and t_day_avg >= -0.8:
+                    data_string += "[" + f.GREEN + crypto_name + f.WHITE + "]   "
+                elif f_month_avg <= -25 or t_day_avg >= -0.8:
+                    data_string += "[" + crypto_name + "]   "
+                else:
+                    data_string += "[" + f.RED + crypto_name + f.WHITE + "]   "
+                data_string += "\t[Price: " + str(price)[:9] + "]  "
+                if f_month_avg <= -25:
+                    data_string += "\t[4 month change: " + f.GREEN + str(f_month_avg)[:5] + f.WHITE + "]"
+                else:
+                    data_string += "\t[4 month change: " + f.RED + str(f_month_avg)[:5] + f.WHITE + "]"
+                if t_day_avg >= -0.8:
+                    data_string += "\t[3 days change: " + f.GREEN + str(t_day_avg)[:5] + f.WHITE + "]"
+                else:
+                    data_string += "\t[3 days change: " + f.RED + str(t_day_avg)[:5] + f.WHITE + "]"
                 print(data_string)
                 id_counter += 1
             print(50*"_")
