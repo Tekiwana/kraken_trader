@@ -7,17 +7,19 @@ import smtplib
 import ssl
 import colorama
 from colorama import Fore as f
+import platform
 
 
 kraken = krakenex.API()
 try:
     kraken.load_key("kraken.key")
 except FileNotFoundError:
-    print("Key file cannot be located.\nMake sure you keep the kraken.key file in the root directory.")
+    print(f.RED + "Key file cannot be located.\nMake sure you keep the kraken.key file in the root directory." + f.WHITE)
     input("\nPress 'ENTER' key to exit")
     os._exit(1)
 kraken = KrakenAPI(kraken)
 
+system = platform.system()
 
 """
 Config:
@@ -37,11 +39,13 @@ crypto_pair_list = [
 to_buy = {}
 open_pos = {}
 trading = False
-colored_line = 0
 
 
-def clear(): return os.system("cls")
-
+def clear(): 
+    if system == "Linux":
+        return os.system("clear")
+    else:
+        return os.system("cls")
 
 def get_balance():
     """
@@ -181,7 +185,6 @@ def email(message):
 #    password = ""
 #    message = """
 #    Automatic message. DO NOT REPLY!
-#    """+str(message)
 
 #    context = ssl.create_default_context()
 #    with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
@@ -205,13 +208,14 @@ if __name__ == "__main__":
         four_month_trigger = -25.0
         three_day_trigger = -0.8
         refresh_rate = 3600
-    print("\n\nYOUR BALANCE IS: ")
+    clear()
+    print(f.WHITE + "\n\nYOUR BALANCE IS: ")
     print(get_balance(), "\n")
 
     while True:
         try:
             id_counter = 1
-            print(f.RED + "Kraken Crypto Trader v0.2 TEST\n" + f.WHITE)
+            print("Kraken Crypto Trader v0.2 TEST\n")
             setting_string = "Settings:\n\t4 month deviation trigger: "
             setting_string += str(four_month_trigger)+" %\n\t"
             setting_string += "3 day deviation trigger: " + \
